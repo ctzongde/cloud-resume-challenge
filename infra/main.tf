@@ -13,6 +13,7 @@ terraform {
 
 # Configure the AWS provider
 provider "aws" {
+    # AWS region where the resources will be created
     region = "ap-southeast-1"
 }
 
@@ -86,4 +87,40 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
     role = aws_iam_role.lambda_role.name
     # ARN of the AWS managed policy for Lambda basic execution role, which allows writing logs to CloudWatch
     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# Package Lambda function code into a zip file
+data "archive_file" "visitor_counter_zip" {
+    # type of archive set to zip
+    type = "zip"
+    # file path to the lambda function source code
+    source_file = "/Users/aaaa/Code/CloudResumeChallenge/retrieveVisitorCountPython.py"
+    # file path to the output zip file
+    output_path = "${path.module}/retrieveVisitorCountPython.zip"
+}
+
+# Create a Lambda function to handle visitor counting
+resource "aws_lambda_function" "visitor_counter_function" {
+    function_name = "visitor-counter-function"
+
+    # Lambda IAM role to allow the function to access DynamoDB and write logs to CloudWatch
+    role = aws_iam_role.lambda_role.arn
+    
+    # Run time environment for the Lambda function
+    runtime = "python3.14"
+
+    # Lambda function handler: file name and function name within the file
+    handler = "retrieveVisitorCountPython.lambda_handler"
+
+    # file path to the zip file containing the Lambda function code
+    filename = data.archive_file.visitor_counter_zip.output_path
+
+    # source code hash to ensure Lambda function is updated when the source code changes
+    source_code_hash = data.archive_file.visitor_counter_zip.output_base64sha256
+
+    # Ensure that the Lambda function is created after the IAM role and policies are in place
+    depends_on = [
+        aws_iam_role_policy.lambda_policy,
+        aws_iam_role_policy_attachment.lambda_logs
+    ]
 }
