@@ -3,7 +3,7 @@ import boto3
 
 # iniitialize DynamoDB resource
 dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("VisitorCounter")
+table = dynamodb.Table("visitor-counter")
 
 # Function runs when Lambda is called
 def lambda_handler(event, context):
@@ -11,10 +11,10 @@ def lambda_handler(event, context):
     response = table.update_item(
         # identify the item to update
         Key={"id": "resume"},
-        # increment the count attribute by 1
-        UpdateExpression="SET #count = #count + :incr",
+        # increment the count attribute by 1 or set it to 1 if it does not exist
+        UpdateExpression="SET #count = if_not_exists(#count, :start) + :incr",
         ExpressionAttributeNames={"#count": "count"},
-        ExpressionAttributeValues={":incr": 1},
+        ExpressionAttributeValues={":start": 0, ":incr": 1},
         ReturnValues="UPDATED_NEW"
     )
 
