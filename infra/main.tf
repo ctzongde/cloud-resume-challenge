@@ -124,3 +124,57 @@ resource "aws_lambda_function" "visitor_counter_function" {
         aws_iam_role_policy_attachment.lambda_logs
     ]
 }
+
+# API Gateway to trigger the Lambda function when the website is accessed
+# HTTP API > Integration > Route > Stage > Deployment
+# Create an API Gateway HTTP API
+resource "aws_apigatewayv2_api" "visitor_counter_api"{
+    name = "visitor-counter-api"
+    protocol_type = "HTTP"
+}
+
+# Create an integration between API Gateway and the Lambda function
+resource "aws_apigatewayv2_integration" "visitor_counter_integration" {
+    # the API Gateway to integrate with
+    api_id = aws_apigatewayv2_api.visitor_counter_api.id
+    # type of integration set to AWS_PROXY to allow API Gateway to proxy requests directly to the Lambda function
+    integration_type = "AWS_PROXY"
+    # the Lambda function to integrate with
+    integration_uri = aws_lambda_function.visitor_counter_function.arn
+    # expects the Lambda function to return a response in the format expected by API Gateway
+    payload_format_version = "2.0"
+}
+
+# Create a route in API Gateway to trigger the Lambda function when the root path is accessed
+resource "aws_apigatewayv2_route" "visior_counter_route" {
+    # the API Gateway to create the route for
+    api_id = aws_apigatewayv2_api.visitor_counter_api.id
+    # the route key defines the HTTP method and path that will trigger this route. 
+    route_key = "GET /count"
+    # the integration to trigger when this route is accessed
+    target = "integrations/${aws_apigatewayv2_integration.visitor_counter_integration.id}"
+}
+
+# stage to deploy the API Gateway
+resource "aws_apigatewayv2_stage" "visitor_counter_stage" {
+    # the API Gateway ID to create the stage for
+    api_id = aws_apigatewayv2_api.visitor_counter_api.id
+    # name of the stage
+    name = "prod"
+    # auto deploy changes to the stage when the API Gateway configuration changes
+    auto_deploy = true
+}
+
+# "aws_lambda_permission" resource to allow API Gateway to invoke the Lambda function
+resource "aws_lambda_permission" "apigw_lambda_permission" {
+    # the Lambda function to allow API Gateway to invoke
+    function_name = aws_lambda_function.visitor_counter_function.function_name
+    # a unique identifier for this permission statement
+    statement_id = "AllowAPIGatewayInvoke"
+    # the action that API Gateway is allowed to perform on the Lambda function
+    action = "lambda:InvokeFunction"
+    # the principal that is allowed to invoke the Lambda function, which is the API Gateway service
+    principal = "apigateway.amazonaws.com"
+    # the source ARN specifies which API Gateway routes are allowed to invoke the Lambda function
+    source_arn = "${aws_apigatewayv2_api.visitor_counter_api.execution_arn}/*/*"
+}
