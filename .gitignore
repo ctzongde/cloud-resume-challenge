@@ -11,3 +11,4 @@
 
 #pytest files
 __pycache__/
+*.zip
