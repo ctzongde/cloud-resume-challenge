@@ -3,7 +3,7 @@ console.log("Javascript file loaded: returnVisitorCounter.js");
 const visitorCounter = document.getElementById("visitorCount");
 
 // fetch the visitor count from the API invoke URL that would return a promise
-fetch("https://u0ulp8txth.execute-api.ap-southeast-1.amazonaws.com/count")
+fetch("https://qhnc6gyb59.execute-api.ap-southeast-1.amazonaws.com/prod/count")
 // open the response as json 
 .then(Response => Response.json())
 // set the innerHTML of the visitorCounter element to the count value from the json response

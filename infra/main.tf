@@ -94,7 +94,7 @@ data "archive_file" "visitor_counter_zip" {
     # type of archive set to zip
     type = "zip"
     # file path to the lambda function source code
-    source_file = "/Users/aaaa/Code/CloudResumeChallenge/retrieveVisitorCountPython.py"
+    source_file = "/Users/aaaa/Code/CloudResumeChallenge/backend/retrieveVisitorCountPython.py"
     # file path to the output zip file
     output_path = "${path.module}/retrieveVisitorCountPython.zip"
 }
@@ -131,6 +131,13 @@ resource "aws_lambda_function" "visitor_counter_function" {
 resource "aws_apigatewayv2_api" "visitor_counter_api"{
     name = "visitor-counter-api"
     protocol_type = "HTTP"
+
+    # CORS configuration to allow cross-origin requests from the website to the API Gateway endpoint
+    cors_configuration {
+        allow_origins = ["*"]
+        allow_methods = ["GET", "OPTIONS"]
+        allow_headers = ["*"]
+    }
 }
 
 # Create an integration between API Gateway and the Lambda function
