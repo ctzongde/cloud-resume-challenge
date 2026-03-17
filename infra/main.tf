@@ -9,6 +9,18 @@ terraform {
             version = ">= 5.0.0"
         }
     }
+    backend "s3" {
+        # S3 bucket name for storing terraform state files
+        bucket = "cloudresume-terraform-state-aaaa"
+        # S3 key for the terraform state file
+        key = "backend/terraform.tfstate"
+        # aws region where the s3 bucket is located
+        region = "ap-southeast-1"
+        # DynamoDB table name for state locking
+        dynamodb_table = "terraform-state-lock"
+        # Enable encryption for the state file in S3
+        encrypt = true
+    }
 }
 
 # Configure the AWS provider
