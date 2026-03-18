@@ -24,7 +24,7 @@ terraform {
         encrypt = true
     }
 
-    # comment to test backend v6
+    # comment to test backend v7
 }
 
 # Configure the AWS provider
