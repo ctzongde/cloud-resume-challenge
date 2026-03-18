@@ -1,7 +1,14 @@
-# go to the file named retrieveVisitorCountPython.py and import the lambda_handler function
-from backend.retrieveVisitorCountPython import lambda_handler
 # import json module to convert JSON text to a Python object
 import json
+# # import os and sys modules to manipulate the Python path for importing the lambda_handler function from the backend directory
+# import os
+# import sys 
+
+# # add parent directory of the current file to the Python path to allow importing the lambda_handler function from the backend directory
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# go to the file named retrieveVisitorCountPython.py and import the lambda_handler function
+from backend.retrieveVisitorCountPython import lambda_handler
 
 # test function to check if the lambda_handler returns a valid count
 def test_lambda_returns_count():
