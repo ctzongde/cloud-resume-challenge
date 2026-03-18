@@ -2,7 +2,7 @@ import json
 import boto3
 
 # iniitialize DynamoDB resource
-dynamodb = boto3.resource("dynamodb")
+dynamodb = boto3.resource("dynamodb", region_name="ap-southeast-1")
 table = dynamodb.Table("visitor-counter")
 
 # Function runs when Lambda is called
