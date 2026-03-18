@@ -24,7 +24,7 @@ terraform {
         encrypt = true
     }
 
-    # comment to test backend v10
+    # comment to test backend v11
 }
 
 # Configure the AWS provider
@@ -110,7 +110,7 @@ data "archive_file" "visitor_counter_zip" {
     # type of archive set to zip
     type = "zip"
     # file path to the lambda function source code
-    source_file = "/Users/aaaa/Code/CloudResumeChallenge/backend/retrieveVisitorCountPython.py"
+    source_file = "${path.module}/../backend/retrieveVisitorCountPython.py"
     # file path to the output zip file
     output_path = "${path.module}/retrieveVisitorCountPython.zip"
 }
