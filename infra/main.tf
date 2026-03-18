@@ -9,6 +9,8 @@ terraform {
             version = ">= 5.0.0"
         }
     }
+
+    # Configure the backend to use AWS S3 for storing terraform state files and DynamoDB for state locking
     backend "s3" {
         # S3 bucket name for storing terraform state files
         bucket = "cloudresume-terraform-state-aaaa"
@@ -21,6 +23,8 @@ terraform {
         # Enable encryption for the state file in S3
         encrypt = true
     }
+
+    # comment to test backend 
 }
 
 # Configure the AWS provider
