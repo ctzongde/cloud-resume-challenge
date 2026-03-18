@@ -1,5 +1,5 @@
 # go to the file named retrieveVisitorCountPython.py and import the lambda_handler function
-from retrieveVisitorCountPython import lambda_handler
+from backend.retrieveVisitorCountPython import lambda_handler
 # import json module to convert JSON text to a Python object
 import json
 
