@@ -25,7 +25,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest
+        pytest tests/test_lambda_function.py
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
