@@ -11,3 +11,5 @@ fetch("https://qhnc6gyb59.execute-api.ap-southeast-1.amazonaws.com/prod/count")
      console.log(data.count + " visitors have visited this resume.");})
 // catch errors and log them to the console
 .catch(error => console.error("Error fetching visitor count:", error));
+
+console.log("This proves that the front CI/CD pipeline is working");
