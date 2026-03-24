@@ -12,3 +12,5 @@
 #pytest files
 __pycache__/
 *.zip
+
+s3-static-website-policy.json
